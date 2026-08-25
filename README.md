@@ -1,3 +1,7 @@
+Setting up the module requires at a minimum a merchantID, a signature/secret key and a gateway URL. If you already have a CreatePay account please contact createcommerce@createpay.com. For all other enquires please contact hello@createpay.com
+
+
+
 # Magento
 Payment module for Magento 2
 
