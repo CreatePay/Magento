@@ -1,57 +1,200 @@
-Setting up the module requires at a minimum a merchantID, a signature/secret key and a gateway URL. If you already have a CreatePay account please contact createcommerce@createpay.com. For all other enquires please contact hello@createpay.com
+# CreatePay for Magento 2
 
+A payment module for Magento 2 that integrates with the CreatePay payment gateway, supporting both Hosted and Direct payment integrations.
 
+## Compatibility
 
-# Magento
-Payment module for Magento 2
+- **Magento:** 2.3 and 2.4
+- **Integration methods:** Hosted and Direct
 
-Compatibility
+## Requirements
 
-Compatible with Magento 2.3 and Magento 2.4
+The following credentials and configuration details are required to set up the module:
 
-Supports both Hosted and Direct integrations
+- Merchant ID
+- Signature/Secret Key
+- Gateway URL
 
-Installation
-Step 1:
+If you already have a CreatePay account, please contact [createcommerce@createpay.com](mailto:createcommerce@createpay.com).
 
-If you are upgrading this module, please make sure to disable the module first with bin/magento module:disable Cardstream_PaymentGateway. Afterwards, make sure to delete the app/code/Cardstream directory that may interfere with the new version. Make sure to delete the Cardstream_PaymentGateway row from the setup_module table in the database so that any database tables required can get created.
+For all other enquiries, please contact [hello@createpay.com](mailto:hello@createpay.com).
 
-Step 2: Copy the contents of httpdocs to your Magento root directory. If you are asked if you want to replace any existing files, click Yes.
+## Installation
 
-Step 3: Enable the new module using the command bin/magento module:enable Cardstream_PaymentGateway
+### Step 1: Prepare for Installation or Upgrade
 
-Step 4: Upgrade and re-compile magento so that the system will install the module and create all necessary arrangements for the module. This command can be helpful...
+If you are upgrading an existing installation, disable the module before proceeding.
 
-bin/magento setup:upgrade && bin/magento setup:db-schema:upgrade && bin/magento setup:di:compile && chmod 775 -R ./var
-Step 5: Login to the Admin area of Magento. Click on System > Cache Management. Click on the button labelled ‘Flush Magento Cache’, located at the top right of the page.
+Run the following command from your Magento root directory:
 
-Step 6: Click on Stores > Configuration then click on Payment Methods under the Sales heading on the left-hand side of the page. All installed payment methods will be displayed.
+```bash
+bin/magento module:disable Cardstream_PaymentGateway
+```
 
-Step 7: Click on Cardstream Gateway to expand the configuration options that you will need to fill out before you can use the module. Here you can also select the hosted or direct integration type. Debugging should be turned off during production.
+Next, delete the existing `app/code/Cardstream` directory if it is present, as it may interfere with the new version.
 
-Step 8: Head over to the store's settings and select advanced and then system. Once on this page; change the caching type to 'Varnished'.
+You must also delete the `Cardstream_PaymentGateway` entry from the `setup_module` database table. This allows the required database tables and schema to be created during installation.
 
-FAQ
-The processing page /paymentgateway/order/process shows an error page (Page Not Found)
+> **Note:** Back up your database and existing module files before upgrading.
 
-Did you upgrade and re-compile Magento? Otherwise, have you changed either the order controller filename, the directory the order controller was in, or the name of that directory? Do you have the route setup in the /etc/frontend/routes.xml under the route attributes; id of cardstream and frontName as cardstream. Does that same route contain the module element with a name attribute of Cardstream_PaymentGateway? If you answered no to any of these questions. Please set up the appropriate arrangements based on the questions asked and try again after an upgrade & recompile command. Ask support if the error continues.
+### Step 2: Copy the Module Files
 
-I get the following error - router requires an id but one isn't set
+1. Locate the `httpdocs` directory included with the module.
+2. Copy its contents into the root directory of your Magento installation.
+3. If prompted to replace existing files, select **Yes**.
 
-Go to etc/frontend/routes.xml and make sure the router element uses an id attribute with the value standard
+### Step 3: Enable the Module
 
-I get the following error - "Module version difference schema version higher/lower than in a database"
+From your Magento root directory, run:
 
-Make sure to delete the Cardstream_PaymentGateway row from the setup_module database so that any database tables required can get created during the upgrade/db-schema process upon installation
+```bash
+bin/magento module:enable Cardstream_PaymentGateway
+```
 
-I get incorrect signature during checkout
+### Step 4: Upgrade and Compile Magento
 
-Is a signature set up in your configuration both in Magento and the MMS? Make sure this only contains alphabetical and numeric characters without any spaces, full-stops, etc.
+Run the following commands to upgrade the database, compile dependencies and prepare Magento for the new module.
 
-I cannot see the Cardstream Gateway in the backend (admin area)
+```bash
+bin/magento setup:upgrade && \
+bin/magento setup:db-schema:upgrade && \
+bin/magento setup:di:compile && \
+chmod 775 -R ./var
+```
 
-Please try running the following commands:
+These commands allow Magento to install the module and create the necessary configurations.
 
+### Step 5: Flush the Magento Cache
+
+1. Log in to the Magento Admin Panel.
+2. Navigate to **System > Cache Management**.
+3. Click **Flush Magento Cache** in the top-right corner of the page.
+
+### Step 6: Open the Payment Configuration
+
+1. Navigate to **Stores > Configuration**.
+2. Under the **Sales** section in the left-hand menu, select **Payment Methods**.
+3. Locate the installed payment methods.
+
+### Step 7: Configure the Cardstream Gateway
+
+1. Expand the **Cardstream Gateway** section.
+2. Enter the required payment gateway credentials and configuration details.
+3. Select your preferred integration method:
+   - **Hosted**
+   - **Direct**
+4. Configure the remaining settings as required.
+
+> **Important:** Debugging should be disabled in production environments.
+
+### Step 8: Configure the Cache Type
+
+1. Navigate to **Stores > Configuration**.
+2. Select **Advanced > System**.
+3. Locate the caching configuration.
+4. Change the caching type to **Varnished**.
+
+Save your changes.
+
+---
+
+## Frequently Asked Questions (FAQ)
+
+### 1. The `/paymentgateway/order/process` page displays a "Page Not Found" error
+
+**Problem:** The payment processing page displays a 404 error when attempting to process an order.
+
+**Solution:**
+
+Check the following:
+
+- Have you upgraded and recompiled Magento after installing the module?
+- Has the order controller filename been changed?
+- Has the order controller directory or its name been modified?
+- Is the route correctly configured in `etc/frontend/routes.xml`?
+
+The route configuration should contain the following:
+
+- **Route ID:** `cardstream`
+- **Front Name:** `cardstream`
+- **Module Name:** `Cardstream_PaymentGateway`
+
+Ensure that the route and module configuration are correct.
+
+If you have made any changes, run the Magento upgrade and compilation commands again.
+
+If the issue persists, contact CreatePay Support.
+
+### 2. The error "Router requires an ID but one isn't set" appears
+
+**Problem:** Magento displays the following error:
+
+`Router requires an ID but one isn't set`
+
+**Solution:**
+
+Open the following file:
+
+```text
+etc/frontend/routes.xml
+```
+
+Ensure that the `router` element has an `id` attribute with the value `standard`.
+
+### 3. The error "Module version difference schema version higher/lower than in a database" appears
+
+**Problem:** Magento reports a mismatch between the module's schema version and the version recorded in the database.
+
+**Solution:**
+
+Delete the `Cardstream_PaymentGateway` row from the `setup_module` database table.
+
+This allows Magento to recreate the necessary database structures during the installation or upgrade process.
+
+After removing the entry, run the Magento upgrade and database schema commands again.
+
+### 4. An incorrect signature error appears during checkout
+
+**Problem:** An incorrect signature error occurs when processing a payment during checkout.
+
+**Solution:**
+
+1. Check that a signature is configured correctly in both Magento and the Merchant Management System (MMS).
+2. Ensure that the signature contains only alphanumeric characters.
+3. Remove any spaces, full stops or other special characters.
+
+Verify that the signature matches in both systems.
+
+### 5. The Cardstream Gateway is not visible in the Magento Admin Panel
+
+**Problem:** The Cardstream Gateway does not appear under the payment methods in the Magento Admin Panel.
+
+**Solution:**
+
+Run the following commands from your Magento root directory:
+
+```bash
 php bin/magento setup:upgrade
 php bin/magento setup:di:compile
-The amount, address and name appear to cache upon a checkout Are you using the latest version of this module which fixes this issue?
+```
+
+Once the commands have completed successfully, refresh the Magento Admin Panel and check the payment methods again.
+
+### 6. The amount, address and name appear to be cached during checkout
+
+**Problem:** Customer details, including the payment amount, address and name, appear to be cached during checkout.
+
+**Solution:**
+
+Ensure that you are using the latest version of the module, which includes a fix for this issue.
+
+If the problem persists after updating, contact CreatePay Support.
+
+---
+
+## Support
+
+For assistance with an existing CreatePay account, contact:
+
+- **Existing CreatePay accounts:** [createcommerce@createpay.com](mailto:createcommerce@createpay.com)
+- **General enquiries:** [hello@createpay.com](mailto:hello@createpay.com)
